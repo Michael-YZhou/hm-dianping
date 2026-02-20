@@ -1,0 +1,84 @@
+#####################################
+# Maven
+#####################################
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+#####################################
+# Build directories (Gradle / others)
+#####################################
+build/
+
+#####################################
+# Logs
+#####################################
+logs/
+*.log
+
+#####################################
+# Spring Boot configuration (Secrets)
+#####################################
+# Keep example config committed
+application.yml
+application-dev.yml
+application-prod.yml
+
+# Allow example template
+!application.yml.example
+
+#####################################
+# Environment variables
+#####################################
+.env
+.env.*
+*.env
+
+#####################################
+# IntelliJ IDEA
+#####################################
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+#####################################
+# Eclipse / STS
+#####################################
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+#####################################
+# VS Code
+#####################################
+.vscode/
+
+#####################################
+# NetBeans
+#####################################
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+#####################################
+# OS generated files
+#####################################
+.DS_Store
+Thumbs.db
+
+#####################################
+# Java compiled files
+#####################################
+*.class
+
+#####################################
+# Test coverage
+#####################################
+/coverage/
