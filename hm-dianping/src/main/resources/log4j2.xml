@@ -8,8 +8,8 @@
             <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
         </console>
 
-        <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，ture则是每次启动时重新开始写入文件，可临时测试用-->
-        <File name="log" fileName="logs/test.log" append="ture">
+        <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，true则是每次启动时重新开始写入文件，可临时测试用-->
+        <File name="log" fileName="logs/test.log" append="false">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
         </File>
