@@ -12,26 +12,30 @@ import javax.annotation.Resource;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-	@Resource
-	private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-//		页面登录拦截器
-		registry.addInterceptor(new LoginInterceptor())
-				.excludePathPatterns(
-						"/user/code",
-						"/user/login",
-						"/shop",
-						"/shop/**",
-						"/shop-type/list",
-						"/api/**"
-				).excludePathPatterns("/swagger**/**")
-				.excludePathPatterns("/webjars/**")
-				.excludePathPatterns("/v3/**")
-				.excludePathPatterns("/doc.html").order(1);
-//		缓存刷新拦截器
-		registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate)).addPathPatterns("/**").order(0);
-	}
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 缓存刷新拦截器
+        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate))
+				.addPathPatterns("/**").order(0);
 
+        // 页面登录拦截器
+        registry.addInterceptor(new LoginInterceptor())
+                .excludePathPatterns(
+                        "/user/code",
+                        "/user/login",
+                        "/shop",
+                        "/shop/**",
+                        "/shop-type/list",
+                        "/api/**",
+                        "/voucher/**",
+                        "/blog/hot",
+                        "/upload/**"
+                ).excludePathPatterns("/swagger**/**")
+                .excludePathPatterns("/webjars/**")
+                .excludePathPatterns("/v3/**")
+                .excludePathPatterns("/doc.html").order(1);
+    }
 }

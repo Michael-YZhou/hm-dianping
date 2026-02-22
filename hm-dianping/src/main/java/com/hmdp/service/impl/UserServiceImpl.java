@@ -37,72 +37,72 @@ import static com.hmdp.utils.SystemConstants.USER_NICK_NAME_PREFIX;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-	@Resource
-	private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
-	//    @Resource
-//    private RedisTemplate redisTemplate;
-	@Override
-	public Result sendCode(String phone, HttpSession session) {
-//        校验手机号
-		if (RegexUtils.isPhoneInvalid(phone)) {
-//            不符合生成错误信息
-			return Result.fail("手机号格式验证错误");
-		}
-		//        符合生成验证码
-		String code = RandomUtil.randomNumbers(6);
-//        保存验证码到redis
-//        session.setAttribute("code", code);
-		stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + phone, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
-//        发送验证码
-		log.info("发送验证码成功,验证码:{}", code);
+//     @Resource
+//	 private RedisTemplate redisTemplate;
+    @Override
+    public Result sendCode(String phone, HttpSession session) {
+		// 校验手机号
+        if (RegexUtils.isPhoneInvalid(phone)) {
+			// 不符合生成错误信息
+            return Result.fail("手机号格式验证错误");
+        }
+        // 符合生成验证码
+        String code = RandomUtil.randomNumbers(6);
+		// 保存验证码到redis
+		// session.setAttribute("code", code);
+        stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + phone, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
+		// 发送验证码
+        log.info("发送验证码成功,验证码:{}", code);
 
-//        校验
-		return Result.ok();
-	}
+		// 校验
+        return Result.ok();
+    }
 
-	@Override
-	public Result login(LoginFormDTO loginForm, HttpSession session) {
-//        1.校验手机号
-		String phone = loginForm.getPhone();
-		if (RegexUtils.isPhoneInvalid(phone)) {
-			//        2.如果不符合返回错误信息
-			return Result.fail("手机号格式错误");
-		}
-//        3.从Redis获取验证码并校验
-		String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + phone);
-		String code = loginForm.getCode();
-		if (cacheCode == null || !cacheCode.equals(code)) {
-			return Result.fail("验证码错误");
-		}
+    @Override
+    public Result login(LoginFormDTO loginForm, HttpSession session) {
+		// 1.校验手机号
+        String phone = loginForm.getPhone();
+        if (RegexUtils.isPhoneInvalid(phone)) {
+            // 2.如果不符合返回错误信息
+            return Result.fail("手机号格式错误");
+        }
+		// 3.从Redis获取验证码并校验
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + phone);
+        String code = loginForm.getCode();
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return Result.fail("验证码错误");
+        }
 
-//        通过手机号查询用户是否存在
-		User user = query().eq("phone", phone).one();
+		// 通过手机号查询用户是否存在(MybatisPlus)
+        User user = query().eq("phone", phone).one();
 
-//        4.判断用户是否存在
-		if (user == null) {
-			//        不存在则创建用户，并保存用户到数据库
-			user = createUserWithPhone(phone);
-		}
-		//        随机生成token，作为登陆令牌
-		String token = UUID.randomUUID().toString(true);
+        // 4.判断用户是否存在
+        if (user == null) {
+        // 不存在则创建用户，并保存用户到数据库
+            user = createUserWithPhone(phone);
+        }
+        // 随机生成token，作为登陆令牌
+        String token = UUID.randomUUID().toString(true);
 
-//        将User对象转为Hash存储
-		UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
-		Map<String, Object> stringObjectMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
-				CopyOptions.create().setIgnoreNullValue(true).
-						setFieldValueEditor((fieldName, fieldValue) ->
-							fieldValue.toString()));
+		// 将User对象转为Hash存储
+        UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+                CopyOptions.create().setIgnoreNullValue(true).
+                        setFieldValueEditor((fieldName, fieldValue) ->
+                                fieldValue.toString()));
 
-//        5.保存用户到Redis
-//        session.setAttribute("user",user);
-		stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, stringObjectMap);
-//         设置有效期
-		stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.MINUTES);
-//         存储
+		// 5.保存用户到Redis
+		// session.setAttribute("user",user);
+        stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, stringObjectMap);
+		// 设置有效期
+        stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.MINUTES);
+		// 存储
 
-		return Result.ok(token);
-	}
+        return Result.ok(token);
+    }
 
 //    @Override
 //    public Result login(LoginFormDTO loginForm, HttpSession session) {
@@ -126,17 +126,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //        }
 ////        不存在则创建用户，并保存用户到数据库
 //        session.setAttribute("user",user);
-////        5.保存用户到session
+
+    /// /        5.保存用户到session
 //        return Result.ok("欢迎进入");
 //    }
-
-	private User createUserWithPhone(String phone) {
+    private User createUserWithPhone(String phone) {
 //        1.创建用户。
-		User user = new User();
-		user.setPhone(phone);
+        User user = new User();
+        user.setPhone(phone);
 //         user.setNickName("niubi_"+RandomUtil.randomString(8));
-		user.setNickName(USER_NICK_NAME_PREFIX + RandomUtil.randomString(8));
-		save(user);
-		return user;
-	}
+        user.setNickName(USER_NICK_NAME_PREFIX + RandomUtil.randomString(8));
+        save(user); // 用MyBatisPlus保存用户
+        return user;
+    }
 }
