@@ -134,12 +134,11 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 	public Result update(Shop shop) {
 		Long id = shop.getId();
 		if (id == null) {
-//			return Result.ok("商铺信息更新成功");
 			return Result.fail("店铺id不能为空");
 		}
-		//更新数据库
+		// 1.更新数据库(MybatisPlus方法)
 		updateById(shop);
-//		删除缓存
+		// 2.删除缓存(删除过程中出现异常，则整个事务将回滚)
 		stringRedisTemplate.delete(SHOP_KEY + id);
 		return Result.ok();
 	}

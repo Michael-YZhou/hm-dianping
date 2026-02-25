@@ -8,13 +8,21 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class RedisIdWordker {
-	
+public class RedisIdWorker {
+
+	/**
+	 * 开始时间戳
+	 */
 	private static final  long BEGIN_TIMESTAMP = 1700000000L;
+
+	/**
+	 * 序列号位数
+	 */
+	private static final long COUNT_BITS = 32;
 	
 	private StringRedisTemplate stringRedisTemplate;
 	
-	public  RedisIdWordker(StringRedisTemplate stringRedisTemplate){
+	public RedisIdWorker(StringRedisTemplate stringRedisTemplate){
 		this.stringRedisTemplate = stringRedisTemplate;
 	}
 	
@@ -28,9 +36,10 @@ public class RedisIdWordker {
 //		得到当前日期，精确到天
 		String date = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		//自增
-		Long count = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + ":" + date);
+		long count = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + ":" + date);
 
 //		3.拼接并返回
+//		return timestamp << COUNT_BITS | count;
 		return 0L;
 	}
 }
