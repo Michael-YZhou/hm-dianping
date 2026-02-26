@@ -32,7 +32,8 @@ public class MvcConfig implements WebMvcConfigurer {
                         "/api/**",
                         "/voucher/**",
                         "/blog/hot",
-                        "/upload/**"
+                        "/upload/**",
+                        "/voucher-order/**"
                 ).excludePathPatterns("/swagger**/**")
                 .excludePathPatterns("/webjars/**")
                 .excludePathPatterns("/v3/**")

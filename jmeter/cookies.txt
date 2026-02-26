@@ -1,0 +1,4 @@
+# JMeter generated Header file
+User-Agent	ApacheJMeter
+Content-Type	${contentType}
+Authorization	${authorization}

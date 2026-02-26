@@ -39,7 +39,7 @@ public class RedisIdWorker {
 		long count = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + ":" + date);
 
 //		3.拼接并返回
-//		return timestamp << COUNT_BITS | count;
-		return 0L;
+		return timestamp << COUNT_BITS | count;
+//		return 0L;
 	}
 }
